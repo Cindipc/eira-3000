@@ -1,0 +1,47 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/Android.gd" id="1_nvuhj"]
+[ext_resource type="PackedScene" path="res://assets/characters/robot.glb" id="2_0obqg"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dnbtn"]
+radius = 0.42
+height = 1.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t87o3"]
+albedo_color = Color(0.3, 0.03, 0.04, 1)
+metallic = 0.4
+roughness = 0.4
+emission_enabled = true
+emission = Color(1, 0.12, 0.15, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_84o68"]
+radius = 0.1
+height = 0.2
+radial_segments = 16
+rings = 8
+
+[node name="Android" type="CharacterBody3D" unique_id=1998075064]
+collision_layer = 4
+script = ExtResource("1_nvuhj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=557134006]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
+shape = SubResource("CapsuleShape3D_dnbtn")
+
+[node name="Visual" type="Node3D" parent="." unique_id=601888792]
+
+[node name="Robot" type="Node3D" parent="Visual" unique_id=1008488620 instance=ExtResource("2_0obqg")]
+transform = Transform3D(0.36, 0, 0, 0, -1.57361e-08, 0.36, 0, -0.36, -1.57361e-08, 0, 0, 0)
+
+[node name="EyeGlow" type="MeshInstance3D" parent="Visual" unique_id=122091265]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.72, 0.2)
+material_override = SubResource("StandardMaterial3D_t87o3")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_84o68")
+
+[node name="HitLight" type="OmniLight3D" parent="." unique_id=1049564641]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+light_color = Color(1, 0.25, 0.15, 1)
+light_energy = 0.0
+omni_range = 4.0

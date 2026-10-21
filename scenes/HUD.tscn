@@ -1,0 +1,272 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/HUD.gd" id="1_qpvh6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fls4u"]
+bg_color = Color(0.06, 0.08, 0.1, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1, 0.35, 0.2, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1etfg"]
+bg_color = Color(0.25, 0.9, 0.5, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1, 0.35, 0.2, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7hsmw"]
+bg_color = Color(0.08, 0.05, 0.05, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.08, 0.08, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nysna"]
+bg_color = Color(0.9, 0.2, 0.2, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.08, 0.08, 1)
+
+[node name="HUD" type="CanvasLayer" unique_id=1094792877]
+script = ExtResource("1_qpvh6")
+
+[node name="Root" type="Control" parent="." unique_id=1166899820]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="TopLeft" type="Control" parent="Root" unique_id=733035417]
+anchors_preset = 0
+offset_left = 26.0
+offset_top = 20.0
+offset_right = 446.0
+offset_bottom = 120.0
+mouse_filter = 2
+
+[node name="Level" type="Label" parent="Root/TopLeft" unique_id=1020762373]
+layout_mode = 0
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.55, 0.9, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+text = "NIVEL 1"
+
+[node name="Resolutions" type="Label" parent="Root/TopLeft" unique_id=1317959346]
+layout_mode = 0
+offset_top = 32.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.4, 1, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+text = "RESOLUCIONES  0 / 6"
+
+[node name="Files" type="Label" parent="Root/TopLeft" unique_id=294415205]
+layout_mode = 0
+offset_top = 60.0
+offset_bottom = 60.0
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.85, 0.95, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+text = "ARCHIVOS  0 / 0"
+
+[node name="TopRight" type="Control" parent="Root" unique_id=631446568]
+anchors_preset = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -300.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 130.0
+mouse_filter = 2
+
+[node name="HealthLabel" type="Label" parent="Root/TopRight" unique_id=550758678]
+layout_mode = 0
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.5, 1, 0.65, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+text = "INTEGRIDAD  100"
+
+[node name="HealthBar" type="ProgressBar" parent="Root/TopRight" unique_id=899117693]
+layout_mode = 0
+offset_top = 26.0
+offset_right = 270.0
+offset_bottom = 53.0
+theme_override_styles/background = SubResource("StyleBoxFlat_fls4u")
+theme_override_styles/fill = SubResource("StyleBoxFlat_1etfg")
+value = 100.0
+show_percentage = false
+
+[node name="Ammo" type="Label" parent="Root/TopRight" unique_id=426188756]
+layout_mode = 0
+offset_top = 56.0
+offset_bottom = 56.0
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+text = "BALAS  12 / 60"
+
+[node name="Bottom" type="Control" parent="Root" unique_id=1063053609]
+anchors_preset = 0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -64.0
+offset_bottom = -20.0
+mouse_filter = 2
+
+[node name="Objective" type="Label" parent="Root/Bottom" unique_id=1133275361]
+layout_mode = 0
+offset_top = 8.0
+offset_right = 1600.0
+offset_bottom = 38.0
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.75, 0.95, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+horizontal_alignment = 1
+
+[node name="Center" type="Control" parent="Root" unique_id=565064071]
+anchors_preset = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -120.0
+offset_right = 160.0
+offset_bottom = 120.0
+mouse_filter = 2
+
+[node name="Crosshair" type="Control" parent="Root/Center" unique_id=1664392427]
+anchors_preset = 0
+offset_left = 152.0
+offset_top = 112.0
+offset_right = 168.0
+offset_bottom = 128.0
+mouse_filter = 2
+
+[node name="@ColorRect@3" type="ColorRect" parent="Root/Center/Crosshair" unique_id=1849266388]
+layout_mode = 0
+offset_left = 7.0
+offset_right = 9.0
+offset_bottom = 6.0
+mouse_filter = 2
+color = Color(0.6, 0.95, 1, 0.85)
+
+[node name="@ColorRect@4" type="ColorRect" parent="Root/Center/Crosshair" unique_id=1905431369]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 10.0
+offset_right = 9.0
+offset_bottom = 16.0
+mouse_filter = 2
+color = Color(0.6, 0.95, 1, 0.85)
+
+[node name="@ColorRect@5" type="ColorRect" parent="Root/Center/Crosshair" unique_id=1314260037]
+layout_mode = 0
+offset_top = 7.0
+offset_right = 6.0
+offset_bottom = 9.0
+mouse_filter = 2
+color = Color(0.6, 0.95, 1, 0.85)
+
+[node name="@ColorRect@6" type="ColorRect" parent="Root/Center/Crosshair" unique_id=639847089]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 7.0
+offset_right = 16.0
+offset_bottom = 9.0
+mouse_filter = 2
+color = Color(0.6, 0.95, 1, 0.85)
+
+[node name="Prompt" type="Label" parent="Root/Center" unique_id=16323804]
+visible = false
+layout_mode = 0
+offset_top = 170.0
+offset_right = 320.0
+offset_bottom = 198.0
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+horizontal_alignment = 1
+
+[node name="HitMarker" type="Label" parent="Root/Center" unique_id=286925927]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 146.0
+offset_top = 100.0
+offset_right = 146.0
+offset_bottom = 100.0
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1, 0.4, 0.35, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+text = "X"
+
+[node name="Message" type="Label" parent="Root" unique_id=1941301104]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_top = 96.0
+offset_right = 1600.0
+offset_bottom = 136.0
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+horizontal_alignment = 1
+
+[node name="Boss" type="Control" parent="Root" unique_id=1107953531]
+anchors_preset = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_top = 26.0
+offset_right = 320.0
+offset_bottom = 86.0
+mouse_filter = 2
+
+[node name="BossLabel" type="Label" parent="Root/Boss" unique_id=1224403841]
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 26.0
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1, 0.4, 0.35, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+text = "MÁQUINA ANALÍTICA"
+horizontal_alignment = 1
+
+[node name="BossBar" type="ProgressBar" parent="Root/Boss" unique_id=1643068361]
+layout_mode = 0
+offset_top = 30.0
+offset_right = 640.0
+offset_bottom = 57.0
+theme_override_styles/background = SubResource("StyleBoxFlat_7hsmw")
+theme_override_styles/fill = SubResource("StyleBoxFlat_nysna")
+max_value = 600.0
+value = 600.0
+show_percentage = false

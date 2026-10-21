@@ -1,0 +1,50 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/Pickup.gd" id="1_s6scd"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_u187m"]
+radius = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vqyqk"]
+albedo_color = Color(0.24, 0.26, 0.3, 1)
+metallic = 0.95
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_3bp0e"]
+size = Vector3(0.6, 0.44, 0.44)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_017ak"]
+albedo_color = Color(0.02, 0.2, 0.25, 1)
+metallic = 0.4
+roughness = 0.4
+emission_enabled = true
+emission = Color(0, 0.85, 1, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_axj2u"]
+size = Vector3(0.5, 0.12, 0.46)
+
+[node name="Pickup" type="Area3D" unique_id=1351599837]
+collision_layer = 16
+collision_mask = 2
+script = ExtResource("1_s6scd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=158184897]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+shape = SubResource("SphereShape3D_u187m")
+
+[node name="Visual" type="Node3D" parent="." unique_id=300713672]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+
+[node name="Crate" type="MeshInstance3D" parent="Visual" unique_id=2043977443]
+material_override = SubResource("StandardMaterial3D_vqyqk")
+mesh = SubResource("BoxMesh_3bp0e")
+
+[node name="Glow" type="MeshInstance3D" parent="Visual" unique_id=1090464390]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+material_override = SubResource("StandardMaterial3D_017ak")
+mesh = SubResource("BoxMesh_axj2u")
+
+[node name="PickupLight" type="OmniLight3D" parent="Visual" unique_id=1059066285]
+light_color = Color(0.3, 1, 0.5, 1)
+light_energy = 2.2

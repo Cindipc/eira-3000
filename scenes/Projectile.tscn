@@ -1,0 +1,38 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/Projectile.gd" id="1_dprbf"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_vihyi"]
+radius = 0.22
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t87o3"]
+albedo_color = Color(0.3, 0.03, 0.04, 1)
+metallic = 0.4
+roughness = 0.4
+emission_enabled = true
+emission = Color(1, 0.12, 0.15, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_kdm4f"]
+radius = 0.22
+height = 0.44
+radial_segments = 16
+rings = 8
+
+[node name="Projectile" type="Area3D" unique_id=1733190885]
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("1_dprbf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=663934401]
+shape = SubResource("SphereShape3D_vihyi")
+
+[node name="Visual" type="Node3D" parent="." unique_id=2039793817]
+
+[node name="Plasma" type="MeshInstance3D" parent="Visual" unique_id=264425924]
+material_override = SubResource("StandardMaterial3D_t87o3")
+mesh = SubResource("SphereMesh_kdm4f")
+
+[node name="PlasmaLight" type="OmniLight3D" parent="Visual" unique_id=1159358053]
+light_color = Color(1, 0.35, 0.15, 1)
+light_energy = 3.0

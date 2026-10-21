@@ -1,0 +1,228 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/Player.gd" id="1_v6fml"]
+[ext_resource type="PackedScene" path="res://assets/characters/eira.glb" id="2_3li8b"]
+[ext_resource type="Script" path="res://scripts/Weapon.gd" id="3_3li8b"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3li8b"]
+radius = 0.35
+height = 1.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mdl7e"]
+albedo_color = Color(0.1, 0.11, 0.13, 1)
+metallic = 0.9
+roughness = 0.35
+
+[sub_resource type="BoxMesh" id="BoxMesh_qu4a1"]
+size = Vector3(0, 0.04, -0.08)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_70d11"]
+albedo_color = Color(0.02, 0.2, 0.25, 1)
+metallic = 0.4
+roughness = 0.4
+emission_enabled = true
+emission = Color(0, 0.8, 1, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_cw2d6"]
+size = Vector3(0.046, 0.05, -0.08)
+
+[sub_resource type="BoxMesh" id="BoxMesh_khinc"]
+size = Vector3(0, -0.14, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bruh7"]
+albedo_color = Color(0.09, 0.11, 0.14, 1)
+metallic = 0.85
+roughness = 0.55
+
+[sub_resource type="BoxMesh" id="BoxMesh_6eyey"]
+size = Vector3(0, -0.06, -0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_d3wef"]
+size = Vector3(0, 0.115, -0.2)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_o4126"]
+top_radius = 0.028
+bottom_radius = 0.028
+height = 0.16
+radial_segments = 12
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lkdrv"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.9, 0.6, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_p7iby"]
+radius = 0.09
+height = 0.18
+radial_segments = 8
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0rnld"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.9, 0.5, 0.9)
+
+[sub_resource type="BoxMesh" id="BoxMesh_srp4u"]
+size = Vector3(0.04, 0.04, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jfpux"]
+size = Vector3(0.04, 0.04, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_61ith"]
+size = Vector3(0.04, 0.04, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ebwui"]
+size = Vector3(0.04, 0.04, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sfy4j"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.6, 0.25, 0.9)
+
+[sub_resource type="SphereMesh" id="SphereMesh_gv3ic"]
+radius = 0.1
+height = 0.2
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_b8lor"]
+radius = 0.1
+height = 0.2
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_6e537"]
+radius = 0.1
+height = 0.2
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_p07f3"]
+radius = 0.1
+height = 0.2
+radial_segments = 8
+rings = 4
+
+[node name="Player" type="CharacterBody3D" unique_id=340269850]
+collision_layer = 2
+script = ExtResource("1_v6fml")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=175772326]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("CapsuleShape3D_3li8b")
+
+[node name="Visual" type="Node3D" parent="." unique_id=1890453277]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="Eira" type="Node3D" parent="Visual" unique_id=935082203 instance=ExtResource("2_3li8b")]
+
+[node name="CameraPivot" type="Node3D" parent="." unique_id=1530352105]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 1.6, 0)
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=574372890]
+transform = Transform3D(1, 0, 0, 0, 0.99280864, 0.119712204, 0, -0.119712204, 0.99280864, 0, 0, 0)
+cull_mask = 1
+far = 400.0
+
+[node name="Weapon" type="Node3D" parent="CameraPivot/Camera3D" unique_id=1267230906]
+script = ExtResource("3_3li8b")
+visible = false
+
+[node name="GunRoot" type="Node3D" parent="CameraPivot/Camera3D/Weapon" unique_id=783991509]
+visible = false
+
+[node name="Slide" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/GunRoot" unique_id=1731833702]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09, 0.11, 0.42)
+material_override = SubResource("StandardMaterial3D_mdl7e")
+mesh = SubResource("BoxMesh_qu4a1")
+
+[node name="GlowStrip" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/GunRoot" unique_id=182134687]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03, 0.02, 0.18)
+material_override = SubResource("StandardMaterial3D_70d11")
+mesh = SubResource("BoxMesh_cw2d6")
+
+[node name="Grip" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/GunRoot" unique_id=604542315]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 0.24, 0.13)
+material_override = SubResource("StandardMaterial3D_mdl7e")
+mesh = SubResource("BoxMesh_khinc")
+
+[node name="Trigger" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/GunRoot" unique_id=171841541]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0.07, 0.05)
+material_override = SubResource("StandardMaterial3D_bruh7")
+mesh = SubResource("BoxMesh_6eyey")
+
+[node name="Sight" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/GunRoot" unique_id=2105182982]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, 0.035, 0.05)
+material_override = SubResource("StandardMaterial3D_70d11")
+mesh = SubResource("BoxMesh_d3wef")
+
+[node name="Barrel" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/GunRoot" unique_id=1976343043]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.04, -0.32)
+material_override = SubResource("StandardMaterial3D_mdl7e")
+mesh = SubResource("CylinderMesh_o4126")
+
+[node name="Muzzle" type="Node3D" parent="CameraPivot/Camera3D/Weapon/GunRoot" unique_id=1817181935]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, -0.42)
+
+[node name="FlashLight" type="OmniLight3D" parent="CameraPivot/Camera3D/Weapon/GunRoot/Muzzle" unique_id=2126755879]
+light_color = Color(1, 0.85, 0.5, 1)
+light_energy = 0.0
+omni_range = 9.0
+
+[node name="FlashMesh" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/GunRoot/Muzzle" unique_id=961626385]
+visible = false
+material_override = SubResource("StandardMaterial3D_lkdrv")
+mesh = SubResource("SphereMesh_p7iby")
+
+[node name="Tracers" type="Node3D" parent="CameraPivot/Camera3D/Weapon" unique_id=1809323930]
+
+[node name="Tracer_0" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/Tracers" unique_id=1193597724]
+visible = false
+material_override = SubResource("StandardMaterial3D_0rnld")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_srp4u")
+
+[node name="Tracer_1" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/Tracers" unique_id=1645032149]
+visible = false
+material_override = SubResource("StandardMaterial3D_0rnld")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_jfpux")
+
+[node name="Tracer_2" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/Tracers" unique_id=547050808]
+visible = false
+material_override = SubResource("StandardMaterial3D_0rnld")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_61ith")
+
+[node name="Tracer_3" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/Tracers" unique_id=457272766]
+visible = false
+material_override = SubResource("StandardMaterial3D_0rnld")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_ebwui")
+
+[node name="Impacts" type="Node3D" parent="CameraPivot/Camera3D/Weapon" unique_id=1382677569]
+
+[node name="Impact_0" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/Impacts" unique_id=965281306]
+visible = false
+material_override = SubResource("StandardMaterial3D_sfy4j")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_gv3ic")
+
+[node name="Impact_1" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/Impacts" unique_id=545400424]
+visible = false
+material_override = SubResource("StandardMaterial3D_sfy4j")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_b8lor")
+
+[node name="Impact_2" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/Impacts" unique_id=2012814714]
+visible = false
+material_override = SubResource("StandardMaterial3D_sfy4j")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_6e537")
+
+[node name="Impact_3" type="MeshInstance3D" parent="CameraPivot/Camera3D/Weapon/Impacts" unique_id=1731094230]
+visible = false
+material_override = SubResource("StandardMaterial3D_sfy4j")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_p07f3")

@@ -1,0 +1,81 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/PuzzleTerminal.gd" id="1_enqfd"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_i12f4"]
+size = Vector3(4.4, 2.6, 2.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_y2lda"]
+size = Vector3(2.6, 2.4, 1.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8xblc"]
+albedo_color = Color(0.05, 0.055, 0.07, 1)
+metallic = 0.8
+roughness = 0.45
+
+[sub_resource type="BoxMesh" id="BoxMesh_iv74n"]
+size = Vector3(2.8, 2.2, 1.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vqyqk"]
+albedo_color = Color(0.24, 0.26, 0.3, 1)
+metallic = 0.95
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_0y56k"]
+size = Vector3(2.4, 0.9, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_017ak"]
+albedo_color = Color(0.02, 0.2, 0.25, 1)
+metallic = 0.4
+roughness = 0.4
+emission_enabled = true
+emission = Color(0, 0.85, 1, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_w8bg2"]
+size = Vector3(2, 1.1, 0.12)
+
+[node name="Terminal" type="Area3D" unique_id=497586281]
+collision_layer = 32
+collision_mask = 2
+script = ExtResource("1_enqfd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=740301573]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+shape = SubResource("BoxShape3D_i12f4")
+
+[node name="Body" type="StaticBody3D" parent="." unique_id=285654658]
+collision_mask = 0
+
+[node name="BodyShape" type="CollisionShape3D" parent="Body" unique_id=379751049]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+shape = SubResource("BoxShape3D_y2lda")
+
+[node name="Frame" type="MeshInstance3D" parent="." unique_id=1511410035]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+material_override = SubResource("StandardMaterial3D_8xblc")
+mesh = SubResource("BoxMesh_iv74n")
+
+[node name="Console" type="MeshInstance3D" parent="." unique_id=907427128]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0.25)
+material_override = SubResource("StandardMaterial3D_vqyqk")
+mesh = SubResource("BoxMesh_0y56k")
+
+[node name="Screen" type="MeshInstance3D" parent="." unique_id=1923120798]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0.62)
+material_override = SubResource("StandardMaterial3D_017ak")
+mesh = SubResource("BoxMesh_w8bg2")
+
+[node name="ScreenLight" type="OmniLight3D" parent="." unique_id=420625376]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 1)
+light_color = Color(0.2, 0.9, 1, 1)
+light_energy = 3.5
+omni_range = 8.0
+
+[node name="Label" type="Label3D" parent="." unique_id=1029328661]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.85, 0)
+billboard = 1
+no_depth_test = true
+modulate = Color(0.4, 0.9, 1, 1)
+text = "TERMINAL"
+font_size = 44
