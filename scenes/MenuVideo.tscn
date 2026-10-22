@@ -1,8 +1,9 @@
-﻿[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://lr5j7bvgk688"]
 
-[ext_resource type="Script" path="res://scripts/MenuVideo.gd" id="1_mv"]
+[ext_resource type="Script" uid="uid://3vul4ivwv1t0" path="res://scripts/MenuVideo.gd" id="1_mv"]
+[ext_resource type="VideoStream" uid="uid://g6u16wlbuok7" path="res://assets/menu/menu_intro.ogv" id="2_i53x3"]
 
-[node name="MenuVideo" type="Control"]
+[node name="MenuVideo" type="Control" unique_id=409254764]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,19 +12,20 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_mv")
 
-[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=1742434963]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+stream = ExtResource("2_i53x3")
 autoplay = true
 expand = true
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=1916330278]
 
-[node name="Panel" type="Panel" parent="UI"]
+[node name="Panel" type="Panel" parent="UI" unique_id=480763435]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -36,7 +38,7 @@ offset_bottom = -40.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="VBox" type="VBoxContainer" parent="UI/Panel"]
+[node name="VBox" type="VBoxContainer" parent="UI/Panel" unique_id=83662420]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -49,29 +51,29 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 8
 
-[node name="Title" type="Label" parent="UI/Panel/VBox"]
+[node name="Title" type="Label" parent="UI/Panel/VBox" unique_id=307913647]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "EIRA 3000"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 28
 
-[node name="Spacer" type="Control" parent="UI/Panel/VBox"]
-layout_mode = 2
+[node name="Spacer" type="Control" parent="UI/Panel/VBox" unique_id=409127601]
 custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
 
-[node name="BtnJugar" type="Button" parent="UI/Panel/VBox"]
+[node name="BtnJugar" type="Button" parent="UI/Panel/VBox" unique_id=1458138862]
 layout_mode = 2
 text = "JUGAR"
 
-[node name="BtnCreditos" type="Button" parent="UI/Panel/VBox"]
+[node name="BtnCreditos" type="Button" parent="UI/Panel/VBox" unique_id=1432613961]
 layout_mode = 2
 text = "CRÉDITOS"
 
-[node name="BtnSalir" type="Button" parent="UI/Panel/VBox"]
+[node name="BtnSalir" type="Button" parent="UI/Panel/VBox" unique_id=419225306]
 layout_mode = 2
 text = "SALIR"
 
-[node name="Hint" type="Label" parent="UI"]
+[node name="Hint" type="Label" parent="UI" unique_id=34310184]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -83,6 +85,6 @@ offset_right = -16.0
 offset_bottom = -10.0
 grow_horizontal = 0
 grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.6)
 text = "Pulsa ESPACIO/ENTER para omitir intro"
 horizontal_alignment = 2
-theme_override_colors/font_color = Color(1, 1, 1, 0.6)

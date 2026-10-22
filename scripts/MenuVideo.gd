@@ -15,6 +15,7 @@ func _ready() -> void:
 	btn_salir.pressed.connect(_on_salir)
 	var mp4 := load("res://assets/menu/menu_intro.mp4")
 	if mp4:
+		
 		video.stream = mp4
 	if video:
 		video.play()

@@ -1,24 +1,18 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://b8pj1pr2j0upr"]
 
-[ext_resource type="PackedScene" path="res://assets/levels/Futuristic_City.fbx" id="1_2ax8h"]
-[ext_resource type="Script" path="res://scripts/CityStyler.gd" id="2_0roy1"]
+[ext_resource type="PackedScene" uid="uid://baexqebrbofas" path="res://assets/levels/Futuristic_City.fbx" id="1_2ax8h"]
+[ext_resource type="Script" uid="uid://wr5gsbhmv0bx" path="res://scripts/CityStyler.gd" id="2_0roy1"]
 [ext_resource type="PackedScene" path="res://scenes/DataFile.tscn" id="3_epefj"]
-[ext_resource type="Script" path="res://scripts/DataFile.gd" id="4_24quv"]
 [ext_resource type="PackedScene" path="res://scenes/Terminal.tscn" id="5_h35wg"]
-[ext_resource type="Script" path="res://scripts/PuzzleTerminal.gd" id="6_2hnyg"]
-[ext_resource type="Script" path="res://scripts/Barrier.gd" id="7_i5l08"]
+[ext_resource type="Script" uid="uid://c02pllk68kswn" path="res://scripts/Barrier.gd" id="7_i5l08"]
 [ext_resource type="PackedScene" path="res://scenes/Pickup.tscn" id="8_hx5ho"]
-[ext_resource type="Script" path="res://scripts/Pickup.gd" id="9_lgxow"]
-[ext_resource type="Script" path="res://scripts/LevelExit.gd" id="10_8e46r"]
-[ext_resource type="Script" path="res://scripts/LevelDirector.gd" id="11_v603j"]
+[ext_resource type="Script" uid="uid://ddr3qp6vg48n0" path="res://scripts/LevelExit.gd" id="10_8e46r"]
+[ext_resource type="Script" uid="uid://dixduv3umsqyw" path="res://scripts/LevelDirector.gd" id="11_v603j"]
 [ext_resource type="PackedScene" path="res://scenes/Android.tscn" id="12_eo263"]
 [ext_resource type="PackedScene" path="res://scenes/Projectile.tscn" id="13_plwgh"]
 [ext_resource type="PackedScene" path="res://scenes/HUD.tscn" id="14_8adtd"]
-[ext_resource type="Script" path="res://scripts/HUD.gd" id="15_6rf86"]
 [ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="16_x0u7e"]
-[ext_resource type="Script" path="res://scripts/Player.gd" id="17_ans2m"]
 [ext_resource type="PackedScene" path="res://scenes/Nova.tscn" id="18_hk1p0"]
-[ext_resource type="Script" path="res://scripts/NovaFollow.gd" id="19_6vmvl"]
 
 [sub_resource type="Environment" id="Environment_hldop"]
 background_mode = 1
@@ -747,7 +741,7 @@ transform = Transform3D(0.76604444, -0.52654076, 0.3686878, 0, 0.57357645, 0.819
 light_color = Color(0.35, 0.5, 0.85, 1)
 light_energy = 0.4
 
-[node name="FuturisticCity" type="Node3D" parent="." unique_id=1132204823 instance=ExtResource("1_2ax8h")]
+[node name="FuturisticCity" parent="." unique_id=1132204823 instance=ExtResource("1_2ax8h")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.612785, -1.0000101, 12)
 script = ExtResource("2_0roy1")
 corridor_min = Vector2(-52, -10)
@@ -1950,95 +1944,59 @@ mesh = SubResource("BoxMesh_padb5")
 
 [node name="DataFiles" type="Node3D" parent="Gameplay" unique_id=1158991789]
 
-[node name="File_SIGMA-01" type="Area3D" parent="Gameplay/DataFiles" unique_id=973282187 instance=ExtResource("3_epefj")]
+[node name="File_SIGMA-01" parent="Gameplay/DataFiles" unique_id=973282187 instance=ExtResource("3_epefj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0, -4.5)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("4_24quv")
 code = "SIGMA-01"
 
-[node name="File_SIGMA-02" type="Area3D" parent="Gameplay/DataFiles" unique_id=793703914 instance=ExtResource("3_epefj")]
+[node name="File_SIGMA-02" parent="Gameplay/DataFiles" unique_id=793703914 instance=ExtResource("3_epefj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31, 0, -6.5)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("4_24quv")
 code = "SIGMA-02"
 
-[node name="File_TAU-03" type="Area3D" parent="Gameplay/DataFiles" unique_id=1724445113 instance=ExtResource("3_epefj")]
+[node name="File_TAU-03" parent="Gameplay/DataFiles" unique_id=1724445113 instance=ExtResource("3_epefj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, -3)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("4_24quv")
 code = "TAU-03"
 
-[node name="File_TAU-04" type="Area3D" parent="Gameplay/DataFiles" unique_id=207256348 instance=ExtResource("3_epefj")]
+[node name="File_TAU-04" parent="Gameplay/DataFiles" unique_id=207256348 instance=ExtResource("3_epefj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -5.5)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("4_24quv")
 code = "TAU-04"
 
-[node name="File_OMEGA-05" type="Area3D" parent="Gameplay/DataFiles" unique_id=1954852836 instance=ExtResource("3_epefj")]
+[node name="File_OMEGA-05" parent="Gameplay/DataFiles" unique_id=1954852836 instance=ExtResource("3_epefj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -4.5)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("4_24quv")
 code = "OMEGA-05"
 
-[node name="File_OMEGA-06" type="Area3D" parent="Gameplay/DataFiles" unique_id=273298380 instance=ExtResource("3_epefj")]
+[node name="File_OMEGA-06" parent="Gameplay/DataFiles" unique_id=273298380 instance=ExtResource("3_epefj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, -6.5)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("4_24quv")
 code = "OMEGA-06"
 
-[node name="File_PSI-07" type="Area3D" parent="Gameplay/DataFiles" unique_id=972805922 instance=ExtResource("3_epefj")]
+[node name="File_PSI-07" parent="Gameplay/DataFiles" unique_id=972805922 instance=ExtResource("3_epefj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 0, -3)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("4_24quv")
 code = "PSI-07"
 
-[node name="File_PSI-08" type="Area3D" parent="Gameplay/DataFiles" unique_id=192685098 instance=ExtResource("3_epefj")]
+[node name="File_PSI-08" parent="Gameplay/DataFiles" unique_id=192685098 instance=ExtResource("3_epefj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37, 0, -5.5)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("4_24quv")
 code = "PSI-08"
 
 [node name="Terminals" type="Node3D" parent="Gameplay" unique_id=628030842]
 
-[node name="Terminal_00" type="Area3D" parent="Gameplay/Terminals" unique_id=497586281 instance=ExtResource("5_h35wg")]
+[node name="Terminal_00" parent="Gameplay/Terminals" unique_id=497586281 instance=ExtResource("5_h35wg")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -35, 0, -7)
-collision_layer = 32
-collision_mask = 2
-script = ExtResource("6_2hnyg")
 required_codes = Array[String](["SIGMA-01", "SIGMA-02"])
 display_name = "NODO-SIGMA"
 
-[node name="Terminal_01" type="Area3D" parent="Gameplay/Terminals" unique_id=1823145480 instance=ExtResource("5_h35wg")]
+[node name="Terminal_01" parent="Gameplay/Terminals" unique_id=1823145480 instance=ExtResource("5_h35wg")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -16, 0, -7)
-collision_layer = 32
-collision_mask = 2
-script = ExtResource("6_2hnyg")
 index = 1
 required_codes = Array[String](["TAU-03", "TAU-04"])
 display_name = "NODO-TAU"
 
-[node name="Terminal_02" type="Area3D" parent="Gameplay/Terminals" unique_id=1490713116 instance=ExtResource("5_h35wg")]
+[node name="Terminal_02" parent="Gameplay/Terminals" unique_id=1490713116 instance=ExtResource("5_h35wg")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6, 0, -7)
-collision_layer = 32
-collision_mask = 2
-script = ExtResource("6_2hnyg")
 index = 2
 required_codes = Array[String](["OMEGA-05", "OMEGA-06"])
 display_name = "NODO-OMEGA"
 
-[node name="Terminal_03" type="Area3D" parent="Gameplay/Terminals" unique_id=1870369614 instance=ExtResource("5_h35wg")]
+[node name="Terminal_03" parent="Gameplay/Terminals" unique_id=1870369614 instance=ExtResource("5_h35wg")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 32, 0, -7)
-collision_layer = 32
-collision_mask = 2
-script = ExtResource("6_2hnyg")
 index = 3
 required_codes = Array[String](["PSI-07", "PSI-08"])
 display_name = "NODO-PSI"
@@ -2174,87 +2132,54 @@ shape = SubResource("BoxShape3D_gyxhy")
 
 [node name="Pickups" type="Node3D" parent="Gameplay" unique_id=603394991]
 
-[node name="Health_-33" type="Area3D" parent="Gameplay/Pickups" unique_id=1351599837 instance=ExtResource("8_hx5ho")]
+[node name="Health_-33" parent="Gameplay/Pickups" unique_id=1351599837 instance=ExtResource("8_hx5ho")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33, 0, -7.5)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("9_lgxow")
 amount = 30
 
-[node name="Health_-6" type="Area3D" parent="Gameplay/Pickups" unique_id=459714576 instance=ExtResource("8_hx5ho")]
+[node name="Health_-6" parent="Gameplay/Pickups" unique_id=459714576 instance=ExtResource("8_hx5ho")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -3)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("9_lgxow")
 amount = 30
 
-[node name="Health_25" type="Area3D" parent="Gameplay/Pickups" unique_id=273940328 instance=ExtResource("8_hx5ho")]
+[node name="Health_25" parent="Gameplay/Pickups" unique_id=273940328 instance=ExtResource("8_hx5ho")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, -7.5)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("9_lgxow")
 amount = 30
 
-[node name="Health_45" type="Area3D" parent="Gameplay/Pickups" unique_id=1139596069 instance=ExtResource("8_hx5ho")]
+[node name="Health_45" parent="Gameplay/Pickups" unique_id=1139596069 instance=ExtResource("8_hx5ho")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45, 0, -3)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("9_lgxow")
 amount = 30
 
-[node name="Ammo_-44" type="Area3D" parent="Gameplay/Pickups" unique_id=358931849 instance=ExtResource("8_hx5ho")]
+[node name="Ammo_-44" parent="Gameplay/Pickups" unique_id=358931849 instance=ExtResource("8_hx5ho")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44, 0, -3)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("9_lgxow")
 kind = 1
 amount = 24
 
-[node name="Ammo_-24" type="Area3D" parent="Gameplay/Pickups" unique_id=378329771 instance=ExtResource("8_hx5ho")]
+[node name="Ammo_-24" parent="Gameplay/Pickups" unique_id=378329771 instance=ExtResource("8_hx5ho")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, -7.5)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("9_lgxow")
 kind = 1
 amount = 24
 
-[node name="Ammo_-9" type="Area3D" parent="Gameplay/Pickups" unique_id=1039370279 instance=ExtResource("8_hx5ho")]
+[node name="Ammo_-9" parent="Gameplay/Pickups" unique_id=1039370279 instance=ExtResource("8_hx5ho")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -3)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("9_lgxow")
 kind = 1
 amount = 24
 
-[node name="Ammo_4" type="Area3D" parent="Gameplay/Pickups" unique_id=442675079 instance=ExtResource("8_hx5ho")]
+[node name="Ammo_4" parent="Gameplay/Pickups" unique_id=442675079 instance=ExtResource("8_hx5ho")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -7.5)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("9_lgxow")
 kind = 1
 amount = 24
 
-[node name="Ammo_16" type="Area3D" parent="Gameplay/Pickups" unique_id=1914056658 instance=ExtResource("8_hx5ho")]
+[node name="Ammo_16" parent="Gameplay/Pickups" unique_id=1914056658 instance=ExtResource("8_hx5ho")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, -3)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("9_lgxow")
 kind = 1
 amount = 24
 
-[node name="Ammo_28" type="Area3D" parent="Gameplay/Pickups" unique_id=273642833 instance=ExtResource("8_hx5ho")]
+[node name="Ammo_28" parent="Gameplay/Pickups" unique_id=273642833 instance=ExtResource("8_hx5ho")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, -7.5)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("9_lgxow")
 kind = 1
 amount = 24
 
-[node name="Ammo_47" type="Area3D" parent="Gameplay/Pickups" unique_id=791993707 instance=ExtResource("8_hx5ho")]
+[node name="Ammo_47" parent="Gameplay/Pickups" unique_id=791993707 instance=ExtResource("8_hx5ho")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 0, -3)
-collision_layer = 16
-collision_mask = 2
-script = ExtResource("9_lgxow")
 kind = 1
 amount = 24
 
@@ -2324,14 +2249,12 @@ level_index = 2
 android_scene = ExtResource("12_eo263")
 projectile_scene = ExtResource("13_plwgh")
 
-[node name="HUD" type="CanvasLayer" parent="." unique_id=1094792877 instance=ExtResource("14_8adtd")]
-script = ExtResource("15_6rf86")
+[node name="HUD" parent="." unique_id=1094792877 instance=ExtResource("14_8adtd")]
 
-[node name="Player" type="CharacterBody3D" parent="." unique_id=1109304400 instance=ExtResource("16_x0u7e")]
+[node name="Player" parent="." unique_id=1109304400 instance=ExtResource("16_x0u7e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46, 0.2, -4)
-collision_layer = 2
-script = ExtResource("17_ans2m")
 
-[node name="Nova" type="Node3D" parent="." unique_id=50390186 instance=ExtResource("18_hk1p0")]
+[node name="Nova" parent="." unique_id=50390186 instance=ExtResource("18_hk1p0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47, 0, -5.5)
-script = ExtResource("19_6vmvl")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1578988540]
