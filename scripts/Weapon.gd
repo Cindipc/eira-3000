@@ -10,15 +10,13 @@ const BOSS_LAYER := 8
 
 @export var damage := 34.0
 @export var fire_rate := 0.16
-@export var mag_size := 12
-@export var reserve_max := 120
-@export var reload_time := 1.15
+@export var energy_cost := 5.0
 @export var max_range := 140.0
 @export var spread := 0.006
 @export var headshot_multiplier := 2.0
 
-var magazine: int = 12
-var reserve: int = 60
+var magazine: int = 0
+var reserve: int = 0
 var current_target: Node3D = null
 var _cooldown: float = 0.0
 var _reload_left: float = 0.0
@@ -38,9 +36,8 @@ var _flash_timer := 0.0
 @onready var impact_root: Node3D = $Impacts
 
 func _ready() -> void:
-	magazine = mag_size
 	_collect_children()
-	GameState.set_ammo(magazine, reserve)
+	GameState.set_ammo(0, 0)
 	flash_light.visible = false
 	flash_mesh.visible = false
 
@@ -64,10 +61,6 @@ func _process(delta: float) -> void:
 		if _flash_timer <= 0.0:
 			flash_light.visible = false
 			flash_mesh.visible = false
-	if _reloading:
-		_reload_left -= delta
-		if _reload_left <= 0.0:
-			_finish_reload()
 	if _kick > 0.0:
 		_kick = maxf(0.0, _kick - delta * 4.0)
 	if _shake > 0.0:
@@ -91,21 +84,26 @@ func _unhandled_input(event: InputEvent) -> void:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func try_fire() -> void:
-	if _reloading or _cooldown > 0.0:
+	if _cooldown > 0.0:
 		return
 	var player := get_tree().get_first_node_in_group("player")
 	if player and player.has_method("take_damage") and player.dead:
 		return
-	if magazine <= 0:
-		if reserve > 0:
-			start_reload()
-		else:
-			GameState.notify("Sin munición", Color(1.0, 0.6, 0.2))
-			return
-	magazine -= 1
+	var cost := energy_cost
+	var unstable := false
+	if GameState.current_level >= 3 and GameState.lives <= 1:
+		unstable = true
+		cost = energy_cost * randf_range(1.5, 2.2)
+	if GameState.energy_enabled and GameState.energy < cost:
+		GameState.notify("Energía cardíaca insuficiente", Color(1.0, 0.35, 0.45))
+		return
+	if GameState.energy_enabled:
+		GameState.drain_energy(cost)
 	_cooldown = fire_rate
-	GameState.set_ammo(magazine, reserve)
 	emit_signal("fired")
+	if unstable and randf() < 0.3:
+		GameState.notify("INESTABILIDAD: el pulso se dispersa", Color(1.0, 0.45, 0.8))
+		return
 	_shoot()
 
 func _shoot() -> void:
@@ -138,8 +136,8 @@ func _shoot() -> void:
 	_spawn_tracer(origin, end_point)
 	_spawn_impact(end_point, hit.is_empty())
 	_flash()
-	_kick = minf(1.0, _kick + 0.55)
-	_shake = minf(1.0, _shake + 0.25)
+	_kick = minf(1.0, _kick + 0.35)
+	_shake = minf(1.0, _shake + 0.15)
 
 func _apply_hit(hit_node: Node, hit: Dictionary, dir: Vector3) -> void:
 	if hit_node == null:
@@ -218,25 +216,13 @@ func _create_fade(node: MeshInstance3D, duration: float, keep_scale: bool) -> vo
 		tw.parallel().tween_property(mat, "albedo_color", c, duration)
 	tw.tween_callback(func() -> void: node.visible = false)
 
-func start_reload() -> void:
-	if _reloading or reserve <= 0 or magazine >= mag_size:
-		return
-	_reloading = true
-	_reload_left = reload_time
-	GameState.notify("Recargando...", Color(0.7, 0.85, 1.0))
-
-func _finish_reload() -> void:
-	_reloading = false
-	var need := mag_size - magazine
-	var take := mini(need, reserve)
-	magazine += take
-	reserve -= take
-	GameState.set_ammo(magazine, reserve)
+func add_energy(amount: float) -> void:
+	if GameState.energy_enabled:
+		GameState.set_energy(GameState.energy + amount)
+		GameState.notify("+ %d de energía cardíaca" % int(amount), Color(0.9, 0.7, 1.0))
 
 func add_ammo(amount: int) -> void:
-	reserve = mini(reserve_max, reserve + amount)
-	GameState.set_ammo(magazine, reserve)
-	GameState.notify("+%d balas" % amount, Color(1.0, 0.85, 0.4))
+	add_energy(float(amount))
 
 func is_reloading() -> bool:
-	return _reloading
+	return false

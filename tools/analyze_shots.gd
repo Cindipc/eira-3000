@@ -62,7 +62,7 @@ func _analyze(path: String) -> void:
 	for i in 8:
 		line += "%.2f " % (rows[i] / maxf(1.0, float(row_n[i])))
 	print(line)
-	if path.get_file().begins_with("l2_"):
+	if path.get_file().begins_with("l2_") or path.get_file().begins_with("l3_"):
 		_grid(img)
 
 func _grid(img: Image) -> void:

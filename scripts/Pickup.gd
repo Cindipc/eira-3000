@@ -1,6 +1,6 @@
 extends Area3D
 
-enum Kind { HEALTH, AMMO }
+enum Kind { HEALTH, ENERGY, LIFE }
 
 @export var kind: int = Kind.HEALTH
 @export var amount: int = 25
@@ -16,7 +16,13 @@ func _ready() -> void:
 	collision_mask = 2
 	body_entered.connect(_on_body_entered)
 	if light:
-		light.light_color = Color(0.3, 1.0, 0.5) if kind == Kind.HEALTH else Color(1.0, 0.8, 0.3)
+		match kind:
+			Kind.HEALTH:
+				light.light_color = Color(0.3, 1.0, 0.5)
+			Kind.ENERGY:
+				light.light_color = Color(0.8, 0.5, 1.0)
+			Kind.LIFE:
+				light.light_color = Color(1.0, 0.35, 0.5)
 
 func _process(delta: float) -> void:
 	_spin += delta * 1.2
@@ -26,16 +32,25 @@ func _process(delta: float) -> void:
 func _on_body_entered(body: Node3D) -> void:
 	if not body.is_in_group("player"):
 		return
-	if kind == Kind.HEALTH:
-		if body.has_method("heal"):
-			body.heal(amount)
-			GameState.notify("+ %d de integridad" % amount, Color(0.3, 1.0, 0.5))
-	else:
-		var weapon := _find_weapon(body)
-		if weapon and weapon.has_method("add_ammo"):
-			weapon.add_ammo(amount)
-		else:
-			GameState.notify("+ %d balas" % amount, Color(1.0, 0.85, 0.4))
+	match kind:
+		Kind.LIFE:
+			GameState.add_life(1)
+			GameState.notify("Cápsula de reparación: +1 vida", Color(1.0, 0.5, 0.65))
+		Kind.ENERGY:
+			if GameState.energy_enabled:
+				var weapon := _find_weapon(body)
+				if weapon and weapon.has_method("add_energy"):
+					weapon.add_energy(amount)
+				else:
+					GameState.set_energy(GameState.energy + amount)
+					GameState.notify("+ %d de energía cardíaca" % amount, Color(0.85, 0.55, 1.0))
+			elif body.has_method("heal"):
+				body.heal(amount)
+				GameState.notify("Botiquín tecnológico + %d" % amount, Color(0.3, 1.0, 0.5))
+		_:
+			if body.has_method("heal"):
+				body.heal(amount)
+				GameState.notify("+ %d de integridad" % amount, Color(0.3, 1.0, 0.5))
 	var tw := create_tween()
 	tw.tween_property(visual, "scale", Vector3.ZERO, 0.2)
 	tw.tween_callback(queue_free)

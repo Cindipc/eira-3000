@@ -26,16 +26,26 @@ func _process(delta: float) -> void:
 	if not enabled or _changing:
 		return
 	if _player_inside:
-		_changing = true
 		_change_scene()
 		return
 	for body in get_overlapping_bodies():
 		if body.is_in_group("player"):
-			_changing = true
+			_change_scene()
+			return
+	# red de seguridad: si el jugador esta junto al portal pero el area no lo capturo
+	var player := get_tree().get_first_node_in_group("player") as Node3D
+	if player:
+		var to_portal := player.global_position - global_position
+		to_portal.y = 0.0
+		if to_portal.length() <= 4.0:
 			_change_scene()
 			return
 
 func activate() -> void:
+	if enabled:
+		return
+	if requires_boss and GameState.boss_active:
+		return
 	enabled = true
 	collision_layer = 16
 	collision_mask = 2
@@ -46,8 +56,7 @@ func _on_body_entered(body: Node3D) -> void:
 	if not body.is_in_group("player"):
 		return
 	_player_inside = true
-	if enabled and not _changing:
-		_changing = true
+	if enabled:
 		_change_scene()
 
 func _on_body_exited(body: Node3D) -> void:
@@ -55,16 +64,19 @@ func _on_body_exited(body: Node3D) -> void:
 		_player_inside = false
 
 func _change_scene() -> void:
+	if _changing:
+		return
+	_changing = true
+	GameState.finish_level()
+	var tree := get_tree()
 	var layer := CanvasLayer.new()
 	layer.layer = 100
 	var rect := ColorRect.new()
 	rect.color = Color(0, 0, 0, 0)
 	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	layer.add_child(rect)
-	get_tree().root.add_child(layer)
+	tree.root.add_child(layer)
 	var tw := create_tween()
-	tw.tween_property(rect, "color", Color(0, 0, 0, 1), 0.8)
+	tw.tween_property(rect, "color", Color(0, 0, 0, 1), 0.5)
 	tw.tween_callback(func() -> void:
-		get_tree().change_scene_to_file(next_scene))
-	tw.tween_interval(0.4)
-	tw.tween_property(rect, "color", Color(0, 0, 0, 0), 0.8)
+		tree.change_scene_to_file(next_scene))

@@ -42,15 +42,15 @@ func run(p_tree: SceneTree) -> void:
 	else:
 		_fail("resoluciones=%d" % GameState.resolutions_solved)
 
-	print("[flow] recogiendo munición")
-	var ammo_before: int = weapon.reserve
+	print("[flow] recogiendo botiquines")
+	var health_before: float = player.health
 	for pk in tree.get_nodes_in_group("pickup"):
-		if int(pk.get("kind")) != 1:
+		if int(pk.get("kind")) != 0:
 			continue
 		player.global_position = pk.global_position
 		await tree.physics_frame
 		await tree.process_frame
-	_ok("munición recogida: reserva %d -> %d" % [ammo_before, weapon.reserve])
+	_ok("botiquines recogidos: integridad %d -> %d" % [int(health_before), int(player.health)])
 
 	var boss: Node3D = null
 	var w := 0
@@ -67,18 +67,11 @@ func run(p_tree: SceneTree) -> void:
 	player.global_position = boss.global_position + Vector3(0, 0.2, -10.0)
 	await tree.physics_frame
 	var shots := 0
-	var spent := 0
-	var aimed := 0
 	var empty := false
 	while not bool(boss.get("_dead")) and shots < 300:
-		if weapon.magazine <= 0:
-			if weapon.reserve <= 0:
-				empty = true
-				break
-			if not bool(weapon.get("_reloading")):
-				weapon.start_reload()
-			await tree.process_frame
-			continue
+		if GameState.energy_enabled and GameState.energy < weapon.energy_cost:
+			empty = true
+			break
 		var weak: Dictionary = boss.weak_points[0]
 		var target: Vector3 = (weak["node"] as Node3D).global_position
 		if not bool(weak.get("alive")):
@@ -87,12 +80,11 @@ func run(p_tree: SceneTree) -> void:
 		weapon._cooldown = 0.0
 		weapon.try_fire()
 		shots += 1
-		spent += 1
 		await tree.process_frame
 	if empty:
-		_fail("el jugador se quedó sin munición tras %d disparos" % shots)
+		_fail("el jugador se quedó sin energía tras %d disparos" % shots)
 	elif bool(boss.get("_dead")):
-		_ok("el jefe murió con %d disparos (munición restante: %d)" % [shots, weapon.reserve + weapon.magazine])
+		_ok("el jefe murió con %d disparos (energía restante: %d)" % [shots, int(GameState.energy)])
 	else:
 		_fail("el jefe sobrevivió a %d disparos" % shots)
 

@@ -19,8 +19,11 @@ var _boss_spawned := false
 var _spawn_timer := 0.0
 var _wave_index := 0
 var _active_terminal: Node = null
+var _exit_activated := false
+var _check_pending := false
 
 func _ready() -> void:
+	add_to_group("level_director")
 	_collect()
 	GameState.reset_level(level_index, total_resolutions, files.size())
 	GameState.resolution_solved.connect(_on_resolution_solved)
@@ -90,6 +93,8 @@ func _update_objective() -> void:
 	if _active_terminal == null or not is_instance_valid(_active_terminal):
 		if GameState.boss_active:
 			GameState.set_objective("OBJETIVO: Destruye la Máquina Analítica")
+		elif _combat_started:
+			GameState.set_objective("OBJETIVO: Elimina a los androides de seguridad")
 		else:
 			GameState.set_objective("OBJETIVO: Analiza los datos del nivel")
 		return
@@ -107,16 +112,14 @@ func _on_files_changed(_collected: int, _total: int) -> void:
 		_active_terminal.update_prompt()
 	_update_objective()
 
-func _on_resolution_solved(index: int, _total: int) -> void:
-	_open_barriers(index + 1)
-	if index + 1 >= combat_after and not _combat_started:
+func _on_resolution_solved(count: int, _total: int) -> void:
+	_open_barriers(count)
+	if count >= combat_after and not _combat_started:
 		_start_combat()
-	if index + 1 >= total_resolutions and not _boss_spawned:
-		if boss_scene == null:
-			_activate_exit()
-		else:
-			_spawn_boss()
+	if count >= total_resolutions and not _boss_spawned and boss_scene != null:
+		_spawn_boss()
 	_refresh_active_terminal()
+	call_deferred("_check_exit", 0.3)
 
 func _open_barriers(count: int) -> void:
 	for b in barriers:
@@ -129,32 +132,60 @@ func _open_barriers(count: int) -> void:
 func _start_combat() -> void:
 	_combat_started = true
 	GameState.start_combat()
-	GameState.notify("ALERTA: los androides han sido activados", Color(1.0, 0.45, 0.35))
-	_spawn_timer = 1.0
-	for i in 3:
+	GameState.set_prompt("")
+	GameState.notify("ADVERTENCIA: sistemas de seguridad en línea", Color(1.0, 0.5, 0.35))
+	_spawn_timer = 2.0
+	for i in 2:
 		_spawn_android()
+	call_deferred("_check_exit", 0.5)
+
+func _check_exit(delay := 0.0) -> void:
+	if delay > 0.0:
+		if not is_inside_tree():
+			return
+		await get_tree().create_timer(delay).timeout
+		if not is_inside_tree():
+			return
+	_check_pending = false
+	if _exit_activated or not _combat_started:
+		return
+	if get_tree().get_nodes_in_group("android").size() > 0:
+		return
+	if GameState.boss_active:
+		return
+	_activate_exit()
+
+var _spawned_total := 0
 
 func _process(delta: float) -> void:
-	if not _combat_started or _boss_spawned:
+	if _combat_started and not _boss_spawned and GameState.resolutions_solved < GameState.resolutions_total:
+		_spawn_timer -= delta
+		if _spawn_timer <= 0.0:
+			_spawn_timer = maxf(2.5, 6.0 - 0.5 * GameState.resolutions_solved)
+			var alive := get_tree().get_nodes_in_group("android").size()
+			var cap := maxi(2, max_alive - int(_wave_index / 3))
+			if alive < cap:
+				_spawn_android()
+				_wave_index += 1
+	if _exit_activated or not _combat_started or _check_pending:
 		return
-	_spawn_timer -= delta
-	if _spawn_timer > 0.0:
-		return
-	_wave_index += 1
-	var alive := get_tree().get_nodes_in_group("android").size()
-	var cap := maxi(2, max_alive - int(_wave_index / 3))
-	if alive < cap:
-		_spawn_android()
-		if GameState.resolutions_solved >= maxi(2, GameState.resolutions_total - 1):
-			_spawn_android()
-	_spawn_timer = maxf(2.2, 5.0 - 0.45 * GameState.resolutions_solved)
+	_check_pending = true
+	call_deferred("_check_exit", 0.25)
 
 func _spawn_android() -> void:
 	if android_scene == null:
+		android_scene = load("res://scenes/Android.tscn") as PackedScene
+	if android_scene == null:
 		return
 	var player := get_tree().get_first_node_in_group("player") as Node3D
-	if player == null or spawn_points.is_empty():
+	if player == null:
 		return
+	if spawn_points.is_empty():
+		var dummy := Node3D.new()
+		var ang := randf() * TAU
+		dummy.global_position = player.global_position + Vector3(cos(ang) * 12, 2.0, sin(ang) * 12)
+		get_tree().current_scene.add_child(dummy)
+		spawn_points = [dummy]
 	var best: Node3D = null
 	var best_score := -1.0e9
 	for s in spawn_points:
@@ -168,15 +199,20 @@ func _spawn_android() -> void:
 			best = s
 	if best == null:
 		return
-	var android := android_scene.instantiate() as Node3D
-	android.set("projectile_scene", projectile_scene)
-	get_tree().current_scene.add_child(android)
-	android.global_position = best.global_position + Vector3(0, 0.2, 0)
-	var heavy := randf() < 0.35
-	if heavy:
-		android.setup(1, 95.0, 2.9, 13.0, true)
-	else:
-		android.setup(0, 55.0, 4.1, 9.0, false)
+	var base_pos := best.global_position + Vector3(0, 2.0, 0)
+	var count := 1
+	if GameState.resolutions_solved >= maxi(2, GameState.resolutions_total - 1):
+		count = 2
+	for i in range(count):
+		var android := android_scene.instantiate() as Node3D
+		android.set("projectile_scene", load("res://scenes/Projectile.tscn"))
+		get_tree().current_scene.add_child(android)
+		var offset := Vector3(randf_range(-0.8, 0.8), randf_range(-0.2, 0.2), randf_range(-0.8, 0.8))
+		android.global_position = base_pos + offset
+		if randf() < 0.3:
+			android.setup(1, 70.0, 2.8, 9.0, false)
+		else:
+			android.setup(0, 35.0, 3.4, 6.0, true)
 
 func _spawn_boss() -> void:
 	if _boss_spawned or boss_scene == null:
@@ -197,11 +233,17 @@ func _on_boss_defeated() -> void:
 		if b.requires_boss and not b.is_open:
 			b.open_barrier()
 			GameState.notify("Acceso al nivel 2 desbloqueado", Color(0.4, 1.0, 0.8))
-	_activate_exit()
+	_activate_exit(true)
 
-func _activate_exit() -> void:
+func _activate_exit(force := false) -> void:
+	if _exit_activated:
+		return
 	for e in get_tree().get_nodes_in_group("level_exit"):
-		if e.has_method("activate") and not e.enabled:
-			e.activate()
-			GameState.notify("Salida desbloqueada", Color(0.4, 1.0, 0.8))
-			GameState.set_objective("OBJETIVO: Alcanza la salida del nivel")
+		if not e.has_method("activate") or bool(e.get("enabled")):
+			continue
+		if not force and bool(e.get("requires_boss")) and GameState.boss_active:
+			continue
+		e.call("activate")
+		_exit_activated = true
+		GameState.notify("Salida desbloqueada", Color(0.4, 1.0, 0.8))
+		GameState.set_objective("OBJETIVO: Alcanza la salida del nivel")

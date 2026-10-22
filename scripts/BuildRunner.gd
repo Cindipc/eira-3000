@@ -4,6 +4,7 @@ const BUILDERS := {
 	"gameplay": "res://tools/build_gameplay.gd",
 	"level1": "res://tools/build_level1.gd",
 	"level2": "res://tools/build_level2.gd",
+	"level3": "res://tools/build_level3.gd",
 }
 
 const TOOLS := {
@@ -22,6 +23,21 @@ const TOOLS := {
 	"tree": "res://tools/probe_tree.gd",
 	"novashot": "res://tools/shot_nova.gd",
 	"fps": "res://tools/probe_fps.gd",
+	"intro": "res://tools/probe_intro.gd",
+	"hud": "res://tools/probe_hud.gd",
+	"kael": "res://tools/probe_kael.gd",
+	"citybounds": "res://tools/probe_city_bounds.gd",
+	"level3probe": "res://tools/probe_level3.gd",
+	"level3shots": "res://tools/shot_level3.gd",
+	"l3flow": "res://tools/probe_l3_flow.gd",
+	"chain": "res://tools/probe_chain.gd",
+	"l1": "res://tools/probe_l1.gd",
+	"l1b": "res://tools/probe_l1b.gd",
+	"l1c": "res://tools/probe_l1c.gd",
+	"l2": "res://tools/probe_l2.gd",
+	"l1flow": "res://tools/probe_level1_flow.gd",
+	"l1real": "res://tools/probe_l1_real.gd",
+	"charshot": "res://tools/shot_character.gd",
 }
 
 func _ready() -> void:

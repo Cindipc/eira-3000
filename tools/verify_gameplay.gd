@@ -190,6 +190,11 @@ func _check_combat() -> void:
 			_ok("la jugadora recibe daño")
 		else:
 			_fail("la jugadora no recibió daño")
+	# limpiar los androides: la salida se desbloquea cuando no queda ninguno
+	for a in tree.get_nodes_in_group("android"):
+		if is_instance_valid(a) and a.has_method("take_damage"):
+			a.take_damage(9999.0, a.global_position)
+	await tree.create_timer(1.5).timeout
 
 func _check_boss() -> void:
 	print("[boss]")

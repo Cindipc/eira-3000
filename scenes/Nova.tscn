@@ -1,11 +1,11 @@
-[gd_scene format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/NovaFollow.gd" id="1_jcyqo"]
-[ext_resource type="PackedScene" path="res://assets/characters/nova.glb" id="2_pt30h"]
+[ext_resource type="PackedScene" path="res://assets/characters/character.fbx" id="2_pt30h"]
 
-[node name="Nova" type="Node3D" unique_id=312509920]
+[node name="Nova" type="Node3D" unique_id=50390186]
 script = ExtResource("1_jcyqo")
 
-[node name="Visual" type="Node3D" parent="." unique_id=277793436]
+[node name="Visual" type="Node3D" parent="." unique_id=851620892]
 
 [node name="Nova" type="Node3D" parent="Visual" unique_id=1928884365 instance=ExtResource("2_pt30h")]

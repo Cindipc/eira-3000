@@ -526,7 +526,7 @@ func _build_gameplay(root: Node3D) -> void:
 	var exit := Area3D.new()
 	exit.name = "ExitPortal"
 	exit.set_script(load("res://scripts/LevelExit.gd"))
-	exit.set("next_scene", "res://scenes/Level1.tscn")
+	exit.set("next_scene", "res://scenes/Level3.tscn")
 	exit.set("requires_boss", false)
 	exit.set("enabled", false)
 	exit.position = Vector3(48.0, 0.0, -4.0)

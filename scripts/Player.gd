@@ -10,6 +10,8 @@ const MAX_HEALTH := 100.0
 const FIRST_PERSON := false
 const CAM_DIST := 4.6
 const DEATH_DELAY := 2.0
+const FALL_Y := -22.0
+const ENERGY_DRAIN_DPS := 6.0
 
 @onready var visual: Node3D = $Visual
 @onready var cam_pivot: Node3D = $CameraPivot
@@ -26,6 +28,9 @@ var dead: bool = false
 var respawn_point := Vector3.ZERO
 var _death_timer: float = 0.0
 var _hit_flash: float = 0.0
+var _energy_warned := false
+var input_locked := false
+var cinematic_offset := Vector3.ZERO
 
 func _ready() -> void:
 	add_to_group("player")
@@ -46,7 +51,7 @@ func _ready() -> void:
 		cam.cull_mask = 1 | 2
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and not dead:
+	if event is InputEventMouseMotion and not dead and not input_locked:
 		cam_pivot.rotation.y -= event.relative.x * MOUSE_SENS
 		pitch = clampf(pitch - event.relative.y * MOUSE_SENS, -0.9, 0.6)
 		cam.rotation.x = pitch
@@ -60,11 +65,23 @@ func _physics_process(delta: float) -> void:
 			_revive()
 		return
 
+	if input_locked:
+		velocity.x = move_toward(velocity.x, 0.0, 14.0)
+		velocity.z = move_toward(velocity.z, 0.0, 14.0)
+		if not is_on_floor():
+			velocity.y -= GRAVITY * delta
+		cam_pivot.position = cinematic_offset
+		move_and_slide()
+		return
+
 	if invuln > 0.0:
 		invuln -= delta
 	if _hit_flash > 0.0:
 		_hit_flash = maxf(0.0, _hit_flash - delta * 2.5)
 		visual.scale = Vector3.ONE * (1.0 + _hit_flash * 0.06)
+
+	_update_energy(delta)
+	_check_fall()
 
 	if not is_on_floor():
 		velocity.y -= GRAVITY * delta
@@ -144,13 +161,23 @@ func heal(amount: float) -> void:
 	GameState.set_health(health, MAX_HEALTH)
 
 func _die() -> void:
+	if dead:
+		return
 	dead = true
 	_death_timer = DEATH_DELAY
 	_set_animation("idle")
-	GameState.notify("Eira ha sido neutralizada. Reconstruyendo protocolo...", Color(1.0, 0.25, 0.3))
 	GameState.set_prompt("")
+	var over := GameState.lose_life("Eira ha sido neutralizada. Fallos cardíacos recurrentes.")
+	if over:
+		_death_timer = 60.0
+		GameState.emit_signal("game_over")
+		return
+	GameState.set_health(MAX_HEALTH, MAX_HEALTH)
+	health = MAX_HEALTH
 
 func _revive() -> void:
+	if GameState.lives <= 0:
+		return
 	dead = false
 	health = MAX_HEALTH
 	invuln = 2.0
@@ -161,3 +188,48 @@ func _revive() -> void:
 
 func set_respawn_point(p: Vector3) -> void:
 	respawn_point = p
+
+func set_input_locked(value: bool) -> void:
+	input_locked = value
+	if value:
+		velocity.x = 0.0
+		velocity.z = 0.0
+
+func cinematic_lean(amount: float) -> void:
+	if cam:
+		cam.rotation.x = pitch + amount
+
+func cinematic_camera(yaw: float, pitch_amount: float) -> void:
+	if cam_pivot:
+		cam_pivot.rotation.y = yaw
+	pitch = clampf(pitch_amount, -0.9, 0.6)
+	if cam:
+		cam.rotation.x = pitch
+
+func cinematic_rise(height: float) -> void:
+	cinematic_offset.y = height
+
+func _update_energy(delta: float) -> void:
+	if not GameState.energy_enabled:
+		return
+	if GameState.energy >= GameState.max_energy:
+		_energy_warned = false
+		return
+	GameState.set_energy(GameState.energy + 7.0 * delta)
+	if GameState.energy <= 0.0:
+		if not _energy_warned:
+			_energy_warned = true
+			GameState.notify("ENERGÍA CARDÍACA CRÍTICA: Eira pierde integridad", Color(1.0, 0.3, 0.4))
+		health = maxf(0.0, health - ENERGY_DRAIN_DPS * delta)
+		GameState.set_health(health, MAX_HEALTH)
+		if health <= 0.0:
+			_die()
+
+func _check_fall() -> void:
+	if global_position.y < FALL_Y:
+		GameState.notify("Caída fuera de la zona de contención", Color(1.0, 0.5, 0.4))
+		global_position = respawn_point
+		velocity = Vector3.ZERO
+		health = maxf(health, 25.0)
+		GameState.set_health(health, MAX_HEALTH)
+		_die()

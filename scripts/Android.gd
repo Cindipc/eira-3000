@@ -2,35 +2,52 @@ extends CharacterBody3D
 
 enum Kind { SCOUT, SENTINEL }
 
-const GRAVITY := 20.0
-const ATTACK_COOLDOWN := 1.25
+const GRAVITY := 0.0
+const ATTACK_COOLDOWN := 2.2
 
 @export var kind: int = Kind.SCOUT
-@export var max_health := 55.0
-@export var move_speed := 3.9
-@export var attack_damage := 9.0
-@export var attack_range := 2.1
-@export var ranged := false
+@export var max_health := 25.0
+@export var move_speed := 3.2
+@export var attack_damage := 4.0
+@export var attack_range := 5.0
+@export var ranged := true
 @export var projectile_scene: PackedScene = null
-@export var body_height := 1.85
+@export var body_height := 1.0
+## Nivel 3: los androides controlados por Kael cuentan para la mision.
+@export var counts_for_mission: bool = false
+## Marca visual de androide bajo control de Kael.
+@export var controlled: bool = false
+## Distancia a la que el androide persigue al jugador (0 = siempre).
+@export var aggro_range: float = 0.0
 
 @onready var visual: Node3D = $Visual
 @onready var hit_light: OmniLight3D = $HitLight
 
-var health: float = 55.0
+var health: float = 25.0
 var player: Node3D = null
 var _cooldown: float = 0.0
 var _flash: float = 0.0
 var _bob: float = 0.0
 var _alerted := false
 var _dead := false
+var _hover_height := 1.6
+var _target_height := 1.6
 
 func _ready() -> void:
 	add_to_group("android")
 	health = max_health
-	hit_light.visible = false
+	if hit_light:
+		hit_light.visible = false
 	collision_layer = 4
 	collision_mask = 1
+	_hover_height = global_position.y
+	if _hover_height < 1.2:
+		_hover_height = 1.6
+	_target_height = _hover_height
+	if projectile_scene == null:
+		var p := load("res://scenes/Projectile.tscn") as PackedScene
+		if p:
+			projectile_scene = p
 
 func setup(p_kind: int, p_max_health: float, p_speed: float, p_damage: float, p_ranged: bool) -> void:
 	kind = p_kind
@@ -47,36 +64,56 @@ func _physics_process(delta: float) -> void:
 		player = get_tree().get_first_node_in_group("player") as Node3D
 		return
 
-	if not is_on_floor():
-		velocity.y -= GRAVITY * delta
-	else:
-		velocity.y = -1.0
-
 	if _cooldown > 0.0:
 		_cooldown -= delta
-	if _flash > 0.0:
-		_flash = maxf(0.0, _flash - delta * 3.0)
+	if _flash > 0.0 and hit_light:
+		_flash = maxf(0.0, _flash - delta * 4.0)
 		hit_light.light_energy = _flash * 6.0
 		hit_light.visible = _flash > 0.01
 
 	var to_player := player.global_position - global_position
-	to_player.y = 0.0
 	var dist := to_player.length()
 	var dir := to_player.normalized() if dist > 0.001 else Vector3.ZERO
+
+	if aggro_range > 0.0 and dist > aggro_range:
+		velocity.x = move_toward(velocity.x, 0.0, move_speed)
+		velocity.z = move_toward(velocity.z, 0.0, move_speed)
+		var target_y := _hover_height + sin(Time.get_ticks_msec() * 0.002) * 0.15
+		velocity.y = (target_y - global_position.y) * 2.5
+		move_and_slide()
+		_animate(delta)
+		return
 
 	var desired := Vector3.ZERO
 	if dist <= attack_range and _cooldown <= 0.0:
 		_attack(dir, dist)
-	elif dist > attack_range * (1.6 if ranged else 1.05):
+	elif dist > 4.0:
 		desired = dir * move_speed
 		_face(dir, delta)
 	else:
+		desired = -dir * (move_speed * 0.6)
 		_face(dir, delta)
 
 	desired = _steer(desired)
 	velocity.x = desired.x
 	velocity.z = desired.z
-	_separate(delta)
+	# no heavy separation push
+	if get_tree().get_nodes_in_group("android").size() > 3:
+		var push := Vector3.ZERO
+		for other in get_tree().get_nodes_in_group("android"):
+			if other == self or not is_instance_valid(other):
+				continue
+			var d: Vector3 = global_position - (other as Node3D).global_position
+			d.y = 0.0
+			var l := d.length()
+			if l > 0.01 and l < 1.0:
+				push += d / l * (1.0 - l)
+		if push.length() > 0.0:
+			velocity += push.normalized() * 0.8 * delta * 2.0
+
+	var target_y := _hover_height + sin(Time.get_ticks_msec() * 0.002) * 0.15
+	var vy := (target_y - global_position.y) * 2.5
+	velocity.y = vy
 
 	move_and_slide()
 	_animate(delta)
@@ -136,9 +173,9 @@ func _shoot_projectile(dir: Vector3) -> void:
 		return
 	var proj := projectile_scene.instantiate() as Node3D
 	get_tree().current_scene.add_child(proj)
-	proj.global_position = global_position + Vector3.UP * 1.15 + dir * 0.7
+	proj.global_position = global_position + Vector3.UP * 0.4 + dir * 0.6
 	if proj.has_method("setup"):
-		proj.setup(dir, attack_damage, 14.0)
+		proj.setup(dir, attack_damage, 10.0)
 	_muzzle_flash()
 
 func _melee_flash() -> void:
@@ -173,11 +210,19 @@ func _die() -> void:
 	collision_layer = 0
 	collision_mask = 0
 	remove_from_group("android")
+	if counts_for_mission:
+		var d := get_tree().get_first_node_in_group("l3_director")
+		if d and d.has_method("on_controlled_killed"):
+			d.call("on_controlled_killed", self)
 	_spawn_debris()
 	var tw := create_tween()
 	tw.tween_property(visual, "scale", Vector3(0.05, 0.05, 0.05), 0.35)
-	tw.parallel().tween_property(self, "position:y", position.y - 0.3, 0.35)
-	tw.tween_callback(queue_free)
+	tw.parallel().tween_property(self, "position:y", position.y - 0.6, 0.35)
+	tw.tween_callback(func() -> void:
+		queue_free()
+		var ld := get_tree().get_first_node_in_group("level_director")
+		if ld and ld.has_method("_check_exit"):
+			ld.call_deferred("_check_exit"))
 
 func _spawn_debris() -> void:
 	var light := OmniLight3D.new()
